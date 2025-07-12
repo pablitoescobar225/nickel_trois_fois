@@ -1,0 +1,8 @@
+# Secrets et logs
+config.php
+users/
+data/
+visites/
+
+# Fichiers système
+.DS_Store

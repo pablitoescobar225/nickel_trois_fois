@@ -1,14 +1,21 @@
-# Utilise l’image officielle PHP 8.1 avec Apache
 FROM php:8.1-apache
 
-# Copie tout le code dans le répertoire web d’Apache
-COPY . /var/www/html/
+# 1) Met à jour la liste, installe libcurl-dev et pkg-config
+RUN apt-get update && \
+    apt-get install -y libcurl4-openssl-dev pkg-config && \
+    rm -rf /var/lib/apt/lists/*
 
-# Active l’extension cURL (nécessaire pour toTG4)
+# 2) Compile et active l'extension cURL
 RUN docker-php-ext-install curl
 
-# Expose le port par défaut
-EXPOSE 10000
+# 3) Active mod_rewrite si besoin
+RUN a2enmod rewrite
 
-# Lancement d’Apache en avant-plan
+# 4) Copie votre code
+COPY . /var/www/html/
+
+# 5) Expose le port Apache
+EXPOSE 80
+
+# 6) Lancement d’Apache
 CMD ["apache2-foreground"]
